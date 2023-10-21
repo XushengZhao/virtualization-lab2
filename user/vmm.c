@@ -20,6 +20,8 @@ static int
 map_in_guest( envid_t guest, uintptr_t gpa, size_t memsz, 
 	      int fd, size_t filesz, off_t fileoffset ) {
 	/* Your code here */
+	Struct Env * guestenv = envs[guest];
+	region_alloc(guestenv, (void *)gpa, memsz);
 	return -E_NO_SYS;
 } 
 

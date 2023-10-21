@@ -454,6 +454,23 @@ sys_ept_map(envid_t srcenvid, void *srcva,
 	    envid_t guest, void* guest_pa, int perm)
 {
     /* Your code here */
+
+	struct Env * srcenv, *guestenv;
+	struct PageInfo * pp
+	pte_t  * ppte;
+	int r;
+	if ((r = envid2env(srcenvid, &srcenv,1)) < 0 || (r = envid2env(guest,&guestenv,1)) < 0)
+		return r;
+	if (srcva >= (void *) UTOP || guest_pa >= (envs[guest]->env_vmxinfo).phys_sz) 
+		return -E_INVAL;
+	if (srcva != ROUNDDOWN(srcva,PGSIZE) || guest_pa != ROUNDDOWN(guest_pa,PGSIZE)) 
+		return -E_INVAL;
+	if ((pp = page_lookup(srcenv->env_pml4e, srcva, &ppte)) == 0)
+		return -E_INVAL;
+	if ((perm & PTE_W) && !(*ppte & PTE_W))
+		return -E_INVAL;
+	if ((r = ept_map_hva2gpa(guestenv->env_cr3, srcva, guest_pa, perm,1)) < 0)
+		return r;
     return 0;
 }
 
