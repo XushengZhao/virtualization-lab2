@@ -49,6 +49,7 @@ static inline int epte_present(epte_t epte)
 static int ept_lookup_gpa(epte_t* eptrt, void *gpa,
 			  int create, epte_t **epte_out) {
     /* Your code here */
+    struct PageInfo *page   = NULL;
 	if (eptrt == NULL) return -E_INVAL;
 	//walk first top level to get a page map level 4 entry
 	pdpe_t * pdpe = (pdpe_t* ) eptrt [PML4(gpa)];
@@ -90,10 +91,11 @@ static int ept_lookup_gpa(epte_t* eptrt, void *gpa,
 		}else 
 			return -E_NO_MEM;
 	}
-	if (epte_out)
-		pte_t  * pte_indexed =  KADDR((uintptr_t)((pte_t *)(PTE_ADDR(pte)) + PTX(va)));
+	if (epte_out){
+		pte_t * pte_indexed =  KADDR((uintptr_t)((pte_t *)(PTE_ADDR(pte)) + PTX(gpa)));
 		*epte_out = pte_indexed;
-	return 0
+	}
+	return 0;
 }
 
 void ept_gpa2hva(epte_t* eptrt, void *gpa, void **hva) {
@@ -171,14 +173,15 @@ int ept_map_hva2gpa(epte_t* eptrt, void* hva, void* gpa, int perm,
         int overwrite) {
     /* Your code here */
 	epte_t * epte;
+	int r = -1;
 	//lookup the extended page table entry
-	if (r = ept_lookup_gpa(eptrt,gpa,overwrite,&epte) != 0) 
+	if ((r = ept_lookup_gpa(eptrt,gpa,overwrite,&epte)) != 0) 
 		return r;
 	//check if mapping already exists
 	if (*epte & __EPTE_READ && !overwrite)
-		return -E_INVAL
+		return -E_INVAL;
 	//map epte to hva with permissions
-	* epte = (epte_t *) hva | perm | __EPTE_TYPE(EPTE_TYPE_WB) |  __EPTE_IPAT;
+	*epte =  (uint64_t) hva | perm | __EPTE_TYPE(EPTE_TYPE_WB) |  __EPTE_IPAT;
 
     return 0;
 }
