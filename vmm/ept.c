@@ -62,8 +62,9 @@ static int ept_lookup_gpa(epte_t* eptrt, void *gpa,
 			page->pp_ref    += 1;
 			eptrt [PML4(gpa)] = page2pa(page)|__EPTE_FULL;
 			pdpe = (pdpe_t* ) eptrt [PML4(gpa)];
-		}else 
+		}else {
 			return -E_NO_MEM;
+		}
 	}
 	//continue walking page directory pointer table
 	pdpe = KADDR((uintptr_t)((pdpe_t *)PTE_ADDR(pdpe))); //is this needed?
@@ -75,8 +76,9 @@ static int ept_lookup_gpa(epte_t* eptrt, void *gpa,
 			page->pp_ref    += 1;
 			pdpe [PDPE(gpa)] = page2pa(page)|__EPTE_FULL;
 			pdp = (pde_t* ) pdpe [PDPE(gpa)];
-		}else 
+		}else {
 			return -E_NO_MEM;
+		}
 	}
 	//continue walking page directory table
 	pdp = KADDR((uintptr_t)((pde_t *)PTE_ADDR(pdp))); //is this needed?
@@ -88,8 +90,9 @@ static int ept_lookup_gpa(epte_t* eptrt, void *gpa,
 			page->pp_ref    += 1;
 			pdp [PDX(gpa)] = page2pa(page)|__EPTE_FULL;
 			pte = (pde_t* ) pdp [PDX(gpa)];
-		}else 
+		}else {
 			return -E_NO_MEM;
+		}
 	}
 	if (epte_out){
 		pte_t * pte_indexed =  KADDR((uintptr_t)((pte_t *)(PTE_ADDR(pte)) + PTX(gpa)));
@@ -175,8 +178,10 @@ int ept_map_hva2gpa(epte_t* eptrt, void* hva, void* gpa, int perm,
 	epte_t * epte;
 	int r = -1;
 	//lookup the extended page table entry
-	if ((r = ept_lookup_gpa(eptrt,gpa,overwrite,&epte)) != 0) 
+	if ((r = ept_lookup_gpa(eptrt,gpa,overwrite,&epte)) != 0) {
+		cprintf("Failed to lookup gpa for guest\n");
 		return r;
+	}
 	//check if mapping already exists
 	if (*epte & __EPTE_READ && !overwrite)
 		return -E_INVAL;

@@ -105,7 +105,7 @@ Linker script and memory map
  .bss           0x0000000000107004        0x0 obj/kern/bootstrap.o
                 0x0000008004200000                . = 0x8004200000
 
-.text           0x0000008004200000    0x1e419 load address 0x0000000000200000
+.text           0x0000008004200000    0x1e4d3 load address 0x0000000000200000
  *(EXCLUDE_FILE(obj/kern/bootstrap.o) .text .stub .text.* .gnu.linkonce.t.*)
  .text          0x0000008004200000       0x58 obj/kern/entry.o
                 0x000000800420000c                entry
@@ -215,258 +215,259 @@ Linker script and memory map
  .text          0x000000800420d982      0x657 obj/kern/sched.o
                 0x000000800420da66                sched_yield
                 0x000000800420ddd8                sched_halt
- .text          0x000000800420dfd9     0x128e obj/kern/syscall.o
-                0x000000800420ef2f                syscall
-                0x000000800420f229                _export_sys_ept_map
- .text          0x000000800420f267      0xc2f obj/kern/kdebug.o
-                0x000000800420f267                list_func_die
-                0x000000800420f9cd                debuginfo_rip
- .text          0x000000800420fe96      0xa71 obj/kern/printfmt.o
-                0x0000008004210171                vprintfmt
-                0x0000008004210689                printfmt
-                0x0000008004210789                vsnprintf
-                0x0000008004210826                snprintf
- .text          0x0000008004210907      0x155 obj/kern/readline.o
-                0x0000008004210907                readline
- .text          0x0000008004210a5c      0x7c5 obj/kern/string.o
-                0x0000008004210a5c                strlen
-                0x0000008004210a8a                strnlen
-                0x0000008004210ac8                strcpy
-                0x0000008004210b0b                strcat
-                0x0000008004210b5a                strncpy
-                0x0000008004210bba                strlcpy
-                0x0000008004210c2a                strcmp
-                0x0000008004210c7d                strncmp
-                0x0000008004210cee                strchr
-                0x0000008004210d2a                strfind
-                0x0000008004210d61                memset
-                0x0000008004210dec                memmove
-                0x0000008004210f03                memcpy
-                0x0000008004210f37                memcmp
-                0x0000008004210fab                memfind
-                0x0000008004210ff4                strtol
-                0x0000008004211186                strstr
- .text          0x0000008004211221     0x1f4d obj/kern/libdwarf_rw.o
-                0x0000008004211221                _dwarf_read_lsb
-                0x000000800421134d                _dwarf_decode_lsb
-                0x000000800421146e                _dwarf_read_msb
-                0x0000008004211620                _dwarf_decode_msb
-                0x00000080042117cf                _dwarf_read_sleb128
-                0x0000008004211873                _dwarf_read_uleb128
-                0x00000080042118f2                _dwarf_decode_sleb128
-                0x0000008004211984                _dwarf_decode_uleb128
-                0x00000080042119f1                _dwarf_read_string
-                0x0000008004211a80                _dwarf_read_block
-                0x0000008004211ac9                _dwarf_elf_get_byte_order
-                0x0000008004211b37                _dwarf_elf_get_pointer_size
-                0x0000008004211ba1                _dwarf_init
-                0x0000008004211c83                _get_next_cu
-                0x0000008004211e1e                print_cu
-                0x0000008004211e55                _dwarf_abbrev_parse
-                0x00000080042120d8                _dwarf_abbrev_find
-                0x0000008004212209                _dwarf_attr_init
-                0x000000800421289a                dwarf_search_die_within_cu
-                0x0000008004212b93                dwarf_offdie
-                0x0000008004212c96                _dwarf_attr_find
-                0x0000008004212d29                dwarf_siblingof
-                0x0000008004212f6d                dwarf_child
-                0x0000008004213111                _dwarf_find_section_enhanced
- .text          0x000000800421316e     0x257f obj/kern/libdwarf_frame.o
-                0x000000800421316e                _dwarf_frame_params_init
-                0x00000080042131ae                dwarf_get_fde_at_pc
-                0x0000008004213280                _dwarf_frame_regtable_copy
-                0x000000800421422d                _dwarf_frame_get_internal_table
-                0x00000080042144ba                dwarf_get_fde_info_for_all_regs
-                0x000000800421535c                _dwarf_frame_interal_table_init
-                0x0000008004215615                dwarf_set_frame_cfa_value
-                0x0000008004215645                dwarf_init_eh_section
- .text          0x00000080042156ed      0xd4b obj/kern/libdwarf_lineno.o
-                0x0000008004215d49                _dwarf_lineno_init
-                0x00000080042162bd                dwarf_srclines
- .text          0x0000008004216438      0xd12 obj/kern/elf_rw.o
-                0x0000008004216438                _dwarf_find_section
-                0x00000080042164b8                find_debug_sections
-                0x0000008004216781                read_section_headers
-                0x0000008004216ec0                readseg
-                0x0000008004217024                waitdisk
-                0x0000008004217050                readsect
- *fill*         0x000000800421714a        0x6 
- .text          0x0000008004217150       0xe7 obj/kern/mpentry.o
-                0x0000008004217150                mpentry_start
-                0x0000008004217236                mpentry_end
- .text          0x0000008004217237      0x8f2 obj/kern/mpconfig.o
-                0x000000800421770d                mp_init
- .text          0x0000008004217b29      0x473 obj/kern/lapic.o
-                0x0000008004217b6b                lapic_init
-                0x0000008004217d62                cpunum
-                0x0000008004217d97                lapic_eoi
-                0x0000008004217dd2                lapic_startap
-                0x0000008004217f55                lapic_ipi
- .text          0x0000008004217f9c      0x472 obj/kern/spinlock.o
-                0x00000080042180b9                __spin_initlock
-                0x00000080042180ed                spin_lock
-                0x00000080042181c4                spin_unlock
- .text          0x000000800421840e      0x680 obj/kern/e1000.o
-                0x000000800421840e                e1000_attach
-                0x0000008004218799                e1000_transmit
-                0x0000008004218908                e1000_receive
- .text          0x0000008004218a8e      0xafa obj/kern/pci.o
-                0x00000080042192cb                pci_func_enable
-                0x000000800421954c                pci_init
- .text          0x0000008004219588       0xa3 obj/kern/time.o
-                0x0000008004219588                time_init
-                0x000000800421959e                time_tick
-                0x0000008004219610                time_msec
- .text          0x000000800421962b     0x17fa obj/vmm/ept.o
-                0x0000008004219ce8                ept_gpa2hva
-                0x0000008004219fa0                free_guest_mem
-                0x0000008004219fd4                ept_page_insert
-                0x0000008004219ff2                ept_map_hva2gpa
-                0x000000800421a07b                ept_alloc_static
-                0x000000800421a19f                test_ept_map
- .text          0x000000800421ae25     0x2bab obj/vmm/vmx.o
-                0x000000800421afee                vmx_list_vms
-                0x000000800421b0ae                vmx_sel_resume
-                0x000000800421b184                vmx_check_support
-                0x000000800421b205                vmx_check_ept
-                0x000000800421b2d2                check_fixed_bits
-                0x000000800421b39b                vmx_init_vmcs
-                0x000000800421b4a1                vmx_init_vmxon
-                0x000000800421b952                vmcs_host_init
-                0x000000800421bd20                vmcs_guest_init
-                0x000000800421c55e                vmx_read_capability_msr
-                0x000000800421cc2d                vmcs_dump_cpu
-                0x000000800421cd6e                vmexit
-                0x000000800421d318                asm_vmrun
-                0x000000800421d4a8                msr_setup
-                0x000000800421d5bb                bitmap_setup
-                0x000000800421d6fd                vmx_vmrun
- .text          0x000000800421d9d0      0xa49 obj/vmm/vmexits.o
-                0x000000800421dae9                vmx_get_vmdisk_number
-                0x000000800421dafb                vmx_incr_vmdisk_number
-                0x000000800421db1c                find_msr_in_region
-                0x000000800421db73                handle_interrupt_window
-                0x000000800421dbf4                handle_interrupts
-                0x000000800421dca1                handle_rdmsr
-                0x000000800421dda9                handle_wrmsr
-                0x000000800421df15                handle_eptviolation
-                0x000000800421e107                handle_ioinstr
-                0x000000800421e2e6                handle_cpuid
-                0x000000800421e320                handle_vmcall
-                0x000000800421e419                PROVIDE (etext, .)
+ .text          0x000000800420dfd9     0x12a9 obj/kern/syscall.o
+                0x000000800420ef4a                syscall
+                0x000000800420f244                _export_sys_ept_map
+ .text          0x000000800420f282      0xc2f obj/kern/kdebug.o
+                0x000000800420f282                list_func_die
+                0x000000800420f9e8                debuginfo_rip
+ .text          0x000000800420feb1      0xa71 obj/kern/printfmt.o
+                0x000000800421018c                vprintfmt
+                0x00000080042106a4                printfmt
+                0x00000080042107a4                vsnprintf
+                0x0000008004210841                snprintf
+ .text          0x0000008004210922      0x155 obj/kern/readline.o
+                0x0000008004210922                readline
+ .text          0x0000008004210a77      0x7c5 obj/kern/string.o
+                0x0000008004210a77                strlen
+                0x0000008004210aa5                strnlen
+                0x0000008004210ae3                strcpy
+                0x0000008004210b26                strcat
+                0x0000008004210b75                strncpy
+                0x0000008004210bd5                strlcpy
+                0x0000008004210c45                strcmp
+                0x0000008004210c98                strncmp
+                0x0000008004210d09                strchr
+                0x0000008004210d45                strfind
+                0x0000008004210d7c                memset
+                0x0000008004210e07                memmove
+                0x0000008004210f1e                memcpy
+                0x0000008004210f52                memcmp
+                0x0000008004210fc6                memfind
+                0x000000800421100f                strtol
+                0x00000080042111a1                strstr
+ .text          0x000000800421123c     0x1f4d obj/kern/libdwarf_rw.o
+                0x000000800421123c                _dwarf_read_lsb
+                0x0000008004211368                _dwarf_decode_lsb
+                0x0000008004211489                _dwarf_read_msb
+                0x000000800421163b                _dwarf_decode_msb
+                0x00000080042117ea                _dwarf_read_sleb128
+                0x000000800421188e                _dwarf_read_uleb128
+                0x000000800421190d                _dwarf_decode_sleb128
+                0x000000800421199f                _dwarf_decode_uleb128
+                0x0000008004211a0c                _dwarf_read_string
+                0x0000008004211a9b                _dwarf_read_block
+                0x0000008004211ae4                _dwarf_elf_get_byte_order
+                0x0000008004211b52                _dwarf_elf_get_pointer_size
+                0x0000008004211bbc                _dwarf_init
+                0x0000008004211c9e                _get_next_cu
+                0x0000008004211e39                print_cu
+                0x0000008004211e70                _dwarf_abbrev_parse
+                0x00000080042120f3                _dwarf_abbrev_find
+                0x0000008004212224                _dwarf_attr_init
+                0x00000080042128b5                dwarf_search_die_within_cu
+                0x0000008004212bae                dwarf_offdie
+                0x0000008004212cb1                _dwarf_attr_find
+                0x0000008004212d44                dwarf_siblingof
+                0x0000008004212f88                dwarf_child
+                0x000000800421312c                _dwarf_find_section_enhanced
+ .text          0x0000008004213189     0x257f obj/kern/libdwarf_frame.o
+                0x0000008004213189                _dwarf_frame_params_init
+                0x00000080042131c9                dwarf_get_fde_at_pc
+                0x000000800421329b                _dwarf_frame_regtable_copy
+                0x0000008004214248                _dwarf_frame_get_internal_table
+                0x00000080042144d5                dwarf_get_fde_info_for_all_regs
+                0x0000008004215377                _dwarf_frame_interal_table_init
+                0x0000008004215630                dwarf_set_frame_cfa_value
+                0x0000008004215660                dwarf_init_eh_section
+ .text          0x0000008004215708      0xd4b obj/kern/libdwarf_lineno.o
+                0x0000008004215d64                _dwarf_lineno_init
+                0x00000080042162d8                dwarf_srclines
+ .text          0x0000008004216453      0xd12 obj/kern/elf_rw.o
+                0x0000008004216453                _dwarf_find_section
+                0x00000080042164d3                find_debug_sections
+                0x000000800421679c                read_section_headers
+                0x0000008004216edb                readseg
+                0x000000800421703f                waitdisk
+                0x000000800421706b                readsect
+ *fill*         0x0000008004217165        0x3 
+ .text          0x0000008004217168       0xe7 obj/kern/mpentry.o
+                0x0000008004217168                mpentry_start
+                0x000000800421724e                mpentry_end
+ .text          0x000000800421724f      0x8f2 obj/kern/mpconfig.o
+                0x0000008004217725                mp_init
+ .text          0x0000008004217b41      0x473 obj/kern/lapic.o
+                0x0000008004217b83                lapic_init
+                0x0000008004217d7a                cpunum
+                0x0000008004217daf                lapic_eoi
+                0x0000008004217dea                lapic_startap
+                0x0000008004217f6d                lapic_ipi
+ .text          0x0000008004217fb4      0x472 obj/kern/spinlock.o
+                0x00000080042180d1                __spin_initlock
+                0x0000008004218105                spin_lock
+                0x00000080042181dc                spin_unlock
+ .text          0x0000008004218426      0x680 obj/kern/e1000.o
+                0x0000008004218426                e1000_attach
+                0x00000080042187b1                e1000_transmit
+                0x0000008004218920                e1000_receive
+ .text          0x0000008004218aa6      0xafa obj/kern/pci.o
+                0x00000080042192e3                pci_func_enable
+                0x0000008004219564                pci_init
+ .text          0x00000080042195a0       0xa3 obj/kern/time.o
+                0x00000080042195a0                time_init
+                0x00000080042195b6                time_tick
+                0x0000008004219628                time_msec
+ .text          0x0000008004219643     0x1815 obj/vmm/ept.o
+                0x0000008004219d00                ept_gpa2hva
+                0x0000008004219fb8                free_guest_mem
+                0x0000008004219fec                ept_page_insert
+                0x000000800421a00a                ept_map_hva2gpa
+                0x000000800421a0ae                ept_alloc_static
+                0x000000800421a1d2                test_ept_map
+ .text          0x000000800421ae58     0x2c32 obj/vmm/vmx.o
+                0x000000800421b021                vmx_list_vms
+                0x000000800421b0e1                vmx_sel_resume
+                0x000000800421b1b7                vmx_check_support
+                0x000000800421b238                vmx_check_ept
+                0x000000800421b305                check_fixed_bits
+                0x000000800421b3ce                vmx_init_vmcs
+                0x000000800421b4d4                vmx_init_vmxon
+                0x000000800421b985                vmcs_host_init
+                0x000000800421bd53                vmcs_guest_init
+                0x000000800421c591                vmx_read_capability_msr
+                0x000000800421cc60                vmcs_dump_cpu
+                0x000000800421cda1                vmexit
+                0x000000800421d34b                asm_vmrun
+                0x000000800421d574                msr_setup
+                0x000000800421d687                bitmap_setup
+                0x000000800421d7c9                vmx_vmrun
+ .text          0x000000800421da8a      0xa49 obj/vmm/vmexits.o
+                0x000000800421dba3                vmx_get_vmdisk_number
+                0x000000800421dbb5                vmx_incr_vmdisk_number
+                0x000000800421dbd6                find_msr_in_region
+                0x000000800421dc2d                handle_interrupt_window
+                0x000000800421dcae                handle_interrupts
+                0x000000800421dd5b                handle_rdmsr
+                0x000000800421de63                handle_wrmsr
+                0x000000800421dfcf                handle_eptviolation
+                0x000000800421e1c1                handle_ioinstr
+                0x000000800421e3a0                handle_cpuid
+                0x000000800421e3da                handle_vmcall
+                0x000000800421e4d3                PROVIDE (etext, .)
 
-.iplt           0x000000800421e420        0x0 load address 0x000000000021e420
+.iplt           0x000000800421e4e0        0x0 load address 0x000000000021e4e0
  .iplt          0x0000000000000000        0x0 obj/kern/bootstrap.o
 
-.rodata         0x000000800421e420     0x3e28 load address 0x000000000021e420
+.rodata         0x000000800421e4e0     0x3e50 load address 0x000000000021e4e0
  *(EXCLUDE_FILE(obj/kern/bootstrap.o) .rodata .rodata.* .gnu.linkonce.r.*)
- .rodata        0x000000800421e420       0xd6 obj/kern/init.o
- .rodata        0x000000800421e4f6       0x29 obj/kern/console.o
- *fill*         0x000000800421e51f        0x1 
- .rodata        0x000000800421e520      0x2e1 obj/kern/monitor.o
- *fill*         0x000000800421e801        0x7 
- .rodata        0x000000800421e808      0xf2c obj/kern/pmap.o
- *fill*         0x000000800421f734        0x4 
- .rodata        0x000000800421f738      0x1dd obj/kern/env.o
- .rodata        0x000000800421f915       0x1a obj/kern/picirq.o
- *fill*         0x000000800421f92f       0x11 
- .rodata        0x000000800421f940      0x4a0 obj/kern/trap.o
- .rodata        0x000000800421fde0       0x8c obj/kern/sched.o
- *fill*         0x000000800421fe6c        0x4 
- .rodata        0x000000800421fe70      0x1f0 obj/kern/syscall.o
- .rodata        0x0000008004220060      0x37b obj/kern/kdebug.o
- *fill*         0x00000080042203db        0x5 
- .rodata        0x00000080042203e0      0x4c8 obj/kern/printfmt.o
- .rodata        0x00000080042208a8       0x13 obj/kern/readline.o
- *fill*         0x00000080042208bb        0x5 
- .rodata        0x00000080042208c0      0x1ab obj/kern/libdwarf_rw.o
- *fill*         0x0000008004220a6b        0x5 
- .rodata        0x0000008004220a70      0x1d8 obj/kern/libdwarf_frame.o
- .rodata        0x0000008004220c48       0xc3 obj/kern/libdwarf_lineno.o
- .rodata        0x0000008004220d0b       0xa7 obj/kern/elf_rw.o
- *fill*         0x0000008004220db2        0x6 
- .rodata        0x0000008004220db8      0x291 obj/kern/mpconfig.o
- *fill*         0x0000008004221049        0x7 
- .rodata        0x0000008004221050       0x33 obj/kern/lapic.o
- *fill*         0x0000008004221083        0x5 
- .rodata        0x0000008004221088       0xf1 obj/kern/spinlock.o
- *fill*         0x0000008004221179        0x7 
- .rodata        0x0000008004221180       0x87 obj/kern/e1000.o
- *fill*         0x0000008004221207        0x1 
- .rodata        0x0000008004221208      0x287 obj/kern/pci.o
- .rodata        0x000000800422148f       0x2a obj/kern/time.o
- *fill*         0x00000080042214b9        0x7 
- .rodata        0x00000080042214c0      0x786 obj/vmm/ept.o
- *fill*         0x0000008004221c46        0x2 
- .rodata        0x0000008004221c48      0x467 obj/vmm/vmx.o
- *fill*         0x00000080042220af        0x1 
- .rodata        0x00000080042220b0      0x198 obj/vmm/vmexits.o
+ .rodata        0x000000800421e4e0       0xd6 obj/kern/init.o
+ .rodata        0x000000800421e5b6       0x29 obj/kern/console.o
+ *fill*         0x000000800421e5df        0x1 
+ .rodata        0x000000800421e5e0      0x2e1 obj/kern/monitor.o
+ *fill*         0x000000800421e8c1        0x7 
+ .rodata        0x000000800421e8c8      0xf2c obj/kern/pmap.o
+ *fill*         0x000000800421f7f4        0x4 
+ .rodata        0x000000800421f7f8      0x1dd obj/kern/env.o
+ .rodata        0x000000800421f9d5       0x1a obj/kern/picirq.o
+ *fill*         0x000000800421f9ef       0x11 
+ .rodata        0x000000800421fa00      0x4a0 obj/kern/trap.o
+ .rodata        0x000000800421fea0       0x8c obj/kern/sched.o
+ *fill*         0x000000800421ff2c        0x4 
+ .rodata        0x000000800421ff30      0x208 obj/kern/syscall.o
+ *fill*         0x0000008004220138        0x8 
+ .rodata        0x0000008004220140      0x37b obj/kern/kdebug.o
+ *fill*         0x00000080042204bb        0x5 
+ .rodata        0x00000080042204c0      0x4c8 obj/kern/printfmt.o
+ .rodata        0x0000008004220988       0x13 obj/kern/readline.o
+ *fill*         0x000000800422099b        0x5 
+ .rodata        0x00000080042209a0      0x1ab obj/kern/libdwarf_rw.o
+ *fill*         0x0000008004220b4b        0x5 
+ .rodata        0x0000008004220b50      0x1d8 obj/kern/libdwarf_frame.o
+ .rodata        0x0000008004220d28       0xc3 obj/kern/libdwarf_lineno.o
+ .rodata        0x0000008004220deb       0xa7 obj/kern/elf_rw.o
+ *fill*         0x0000008004220e92        0x6 
+ .rodata        0x0000008004220e98      0x291 obj/kern/mpconfig.o
+ *fill*         0x0000008004221129        0x7 
+ .rodata        0x0000008004221130       0x33 obj/kern/lapic.o
+ *fill*         0x0000008004221163        0x5 
+ .rodata        0x0000008004221168       0xf1 obj/kern/spinlock.o
+ *fill*         0x0000008004221259        0x7 
+ .rodata        0x0000008004221260       0x87 obj/kern/e1000.o
+ *fill*         0x00000080042212e7        0x1 
+ .rodata        0x00000080042212e8      0x287 obj/kern/pci.o
+ .rodata        0x000000800422156f       0x2a obj/kern/time.o
+ *fill*         0x0000008004221599        0x7 
+ .rodata        0x00000080042215a0      0x7a6 obj/vmm/ept.o
+ *fill*         0x0000008004221d46        0x2 
+ .rodata        0x0000008004221d48      0x44f obj/vmm/vmx.o
+ *fill*         0x0000008004222197        0x1 
+ .rodata        0x0000008004222198      0x198 obj/vmm/vmexits.o
 
-.eh_frame       0x0000008004222248     0x2668 load address 0x0000000000222248
- .eh_frame      0x0000008004222248       0xf8 obj/kern/init.o
+.eh_frame       0x0000008004222330     0x2668 load address 0x0000000000222330
+ .eh_frame      0x0000008004222330       0xf8 obj/kern/init.o
                                          0xf0 (size before relaxing)
- .eh_frame      0x0000008004222340      0x240 obj/kern/console.o
+ .eh_frame      0x0000008004222428      0x240 obj/kern/console.o
                                         0x258 (size before relaxing)
- .eh_frame      0x0000008004222580       0xc0 obj/kern/monitor.o
+ .eh_frame      0x0000008004222668       0xc0 obj/kern/monitor.o
                                          0xd8 (size before relaxing)
- .eh_frame      0x0000008004222640      0x438 obj/kern/pmap.o
+ .eh_frame      0x0000008004222728      0x438 obj/kern/pmap.o
                                         0x448 (size before relaxing)
- .eh_frame      0x0000008004222a78      0x280 obj/kern/env.o
+ .eh_frame      0x0000008004222b60      0x280 obj/kern/env.o
                                         0x290 (size before relaxing)
- .eh_frame      0x0000008004222cf8       0x40 obj/kern/kclock.o
+ .eh_frame      0x0000008004222de0       0x40 obj/kern/kclock.o
                                          0x58 (size before relaxing)
- .eh_frame      0x0000008004222d38       0x60 obj/kern/picirq.o
+ .eh_frame      0x0000008004222e20       0x60 obj/kern/picirq.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000008004222d98       0x60 obj/kern/printf.o
+ .eh_frame      0x0000008004222e80       0x60 obj/kern/printf.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000008004222df8      0x148 obj/kern/trap.o
+ .eh_frame      0x0000008004222ee0      0x148 obj/kern/trap.o
                                         0x158 (size before relaxing)
- .eh_frame      0x0000008004222f40       0xa8 obj/kern/sched.o
+ .eh_frame      0x0000008004223028       0xa8 obj/kern/sched.o
                                          0xc0 (size before relaxing)
- .eh_frame      0x0000008004222fe8      0x330 obj/kern/syscall.o
+ .eh_frame      0x00000080042230d0      0x330 obj/kern/syscall.o
                                         0x340 (size before relaxing)
- .eh_frame      0x0000008004223318       0x48 obj/kern/kdebug.o
+ .eh_frame      0x0000008004223400       0x48 obj/kern/kdebug.o
                                          0x60 (size before relaxing)
- .eh_frame      0x0000008004223360      0x118 obj/kern/printfmt.o
+ .eh_frame      0x0000008004223448      0x118 obj/kern/printfmt.o
                                         0x128 (size before relaxing)
- .eh_frame      0x0000008004223478       0x20 obj/kern/readline.o
+ .eh_frame      0x0000008004223560       0x20 obj/kern/readline.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000008004223498      0x220 obj/kern/string.o
+ .eh_frame      0x0000008004223580      0x220 obj/kern/string.o
                                         0x238 (size before relaxing)
- .eh_frame      0x00000080042236b8      0x308 obj/kern/libdwarf_rw.o
+ .eh_frame      0x00000080042237a0      0x308 obj/kern/libdwarf_rw.o
                                         0x320 (size before relaxing)
- .eh_frame      0x00000080042239c0      0x1d0 obj/kern/libdwarf_frame.o
+ .eh_frame      0x0000008004223aa8      0x1d0 obj/kern/libdwarf_frame.o
                                         0x1e8 (size before relaxing)
- .eh_frame      0x0000008004223b90       0x98 obj/kern/libdwarf_lineno.o
+ .eh_frame      0x0000008004223c78       0x98 obj/kern/libdwarf_lineno.o
                                          0xb0 (size before relaxing)
- .eh_frame      0x0000008004223c28       0xc0 obj/kern/elf_rw.o
+ .eh_frame      0x0000008004223d10       0xc0 obj/kern/elf_rw.o
                                          0xd8 (size before relaxing)
- .eh_frame      0x0000008004223ce8       0xa8 obj/kern/mpconfig.o
+ .eh_frame      0x0000008004223dd0       0xa8 obj/kern/mpconfig.o
                                          0xc0 (size before relaxing)
- .eh_frame      0x0000008004223d90       0xe0 obj/kern/lapic.o
+ .eh_frame      0x0000008004223e78       0xe0 obj/kern/lapic.o
                                          0xf8 (size before relaxing)
- .eh_frame      0x0000008004223e70       0xe0 obj/kern/spinlock.o
+ .eh_frame      0x0000008004223f58       0xe0 obj/kern/spinlock.o
                                          0xf0 (size before relaxing)
- .eh_frame      0x0000008004223f50       0x60 obj/kern/e1000.o
+ .eh_frame      0x0000008004224038       0x60 obj/kern/e1000.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000008004223fb0      0x140 obj/kern/pci.o
+ .eh_frame      0x0000008004224098      0x140 obj/kern/pci.o
                                         0x158 (size before relaxing)
- .eh_frame      0x00000080042240f0       0x60 obj/kern/time.o
+ .eh_frame      0x00000080042241d8       0x60 obj/kern/time.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000008004224150      0x1f0 obj/vmm/ept.o
+ .eh_frame      0x0000008004224238      0x1f0 obj/vmm/ept.o
                                         0x208 (size before relaxing)
- .eh_frame      0x0000008004224340      0x350 obj/vmm/vmx.o
+ .eh_frame      0x0000008004224428      0x350 obj/vmm/vmx.o
                                         0x368 (size before relaxing)
- .eh_frame      0x0000008004224690      0x220 obj/vmm/vmexits.o
+ .eh_frame      0x0000008004224778      0x220 obj/vmm/vmexits.o
                                         0x230 (size before relaxing)
 
-.rela.dyn       0x00000080042248b0        0x0 load address 0x00000000002248b0
+.rela.dyn       0x0000008004224998        0x0 load address 0x0000000000224998
  .rela.iplt     0x0000000000000000        0x0 obj/kern/bootstrap.o
  .rela.text     0x0000000000000000        0x0 obj/kern/bootstrap.o
  .rela.data     0x0000000000000000        0x0 obj/kern/bootstrap.o
                 0x0000008004225000                . = ALIGN (0x1000)
 
-.data           0x0000008004225000   0x2b8277 load address 0x0000000000225000
+.data           0x0000008004225000   0x2b8b37 load address 0x0000000000225000
  *(EXCLUDE_FILE(obj/kern/bootstrap.o) .data)
  .data          0x0000008004225000    0x10042 obj/kern/entry.o
                 0x0000008004225000                bootstack
@@ -585,15 +586,15 @@ Linker script and memory map
  .data          0x000000800448d600    0x1b18e obj/user/testshell
                 0x000000800448d600                _binary_obj_user_testshell_start
                 0x00000080044a878e                _binary_obj_user_testshell_end
- .data          0x00000080044a878e    0x1696c obj/user/vmm
+ .data          0x00000080044a878e    0x1722c obj/user/vmm
                 0x00000080044a878e                _binary_obj_user_vmm_start
-                0x00000080044bf0fa                _binary_obj_user_vmm_end
- .data          0x00000080044bf0fa    0x1e17d obj/user/sh
-                0x00000080044bf0fa                _binary_obj_user_sh_start
-                0x00000080044dd277                _binary_obj_user_sh_end
-                0x00000080044dd277                PROVIDE (edata, .)
+                0x00000080044bf9ba                _binary_obj_user_vmm_end
+ .data          0x00000080044bf9ba    0x1e17d obj/user/sh
+                0x00000080044bf9ba                _binary_obj_user_sh_start
+                0x00000080044ddb37                _binary_obj_user_sh_end
+                0x00000080044ddb37                PROVIDE (edata, .)
 
-.igot.plt       0x00000080044dd278        0x0 load address 0x00000000004dd278
+.igot.plt       0x00000080044ddb38        0x0 load address 0x00000000004ddb38
  .igot.plt      0x0000000000000000        0x0 obj/kern/bootstrap.o
 
 .bss            0x00000080044de000   0x242010 load address 0x00000000004de000
@@ -825,7 +826,7 @@ Linker script and memory map
  .debug_abbrev  0x00000000000031a4      0x3ae obj/vmm/vmx.o
  .debug_abbrev  0x0000000000003552      0x26d obj/vmm/vmexits.o
 
-.debug_line     0x0000000000000000     0x4e19
+.debug_line     0x0000000000000000     0x4e1e
  *(.debug_line)
  .debug_line    0x0000000000000000       0x99 obj/kern/bootstrap.o
  .debug_line    0x0000000000000099       0x51 obj/kern/entry.o
@@ -840,25 +841,25 @@ Linker script and memory map
  .debug_line    0x0000000000001bb7      0x325 obj/kern/trap.o
  .debug_line    0x0000000000001edc       0x75 obj/kern/trapentry.o
  .debug_line    0x0000000000001f51      0x196 obj/kern/sched.o
- .debug_line    0x00000000000020e7      0x2a0 obj/kern/syscall.o
- .debug_line    0x0000000000002387      0x1e3 obj/kern/kdebug.o
- .debug_line    0x000000000000256a      0x28e obj/kern/printfmt.o
- .debug_line    0x00000000000027f8       0x94 obj/kern/readline.o
- .debug_line    0x000000000000288c      0x1eb obj/kern/string.o
- .debug_line    0x0000000000002a77      0x45a obj/kern/libdwarf_rw.o
- .debug_line    0x0000000000002ed1      0x4f9 obj/kern/libdwarf_frame.o
- .debug_line    0x00000000000033ca      0x206 obj/kern/libdwarf_lineno.o
- .debug_line    0x00000000000035d0      0x231 obj/kern/elf_rw.o
- .debug_line    0x0000000000003801       0x74 obj/kern/mpentry.o
- .debug_line    0x0000000000003875      0x1f9 obj/kern/mpconfig.o
- .debug_line    0x0000000000003a6e      0x16a obj/kern/lapic.o
- .debug_line    0x0000000000003bd8      0x17a obj/kern/spinlock.o
- .debug_line    0x0000000000003d52      0x17e obj/kern/e1000.o
- .debug_line    0x0000000000003ed0      0x1dc obj/kern/pci.o
- .debug_line    0x00000000000040ac       0x50 obj/kern/time.o
- .debug_line    0x00000000000040fc      0x372 obj/vmm/ept.o
- .debug_line    0x000000000000446e      0x73d obj/vmm/vmx.o
- .debug_line    0x0000000000004bab      0x26e obj/vmm/vmexits.o
+ .debug_line    0x00000000000020e7      0x2a2 obj/kern/syscall.o
+ .debug_line    0x0000000000002389      0x1e3 obj/kern/kdebug.o
+ .debug_line    0x000000000000256c      0x28e obj/kern/printfmt.o
+ .debug_line    0x00000000000027fa       0x94 obj/kern/readline.o
+ .debug_line    0x000000000000288e      0x1eb obj/kern/string.o
+ .debug_line    0x0000000000002a79      0x45a obj/kern/libdwarf_rw.o
+ .debug_line    0x0000000000002ed3      0x4f9 obj/kern/libdwarf_frame.o
+ .debug_line    0x00000000000033cc      0x206 obj/kern/libdwarf_lineno.o
+ .debug_line    0x00000000000035d2      0x231 obj/kern/elf_rw.o
+ .debug_line    0x0000000000003803       0x74 obj/kern/mpentry.o
+ .debug_line    0x0000000000003877      0x1f9 obj/kern/mpconfig.o
+ .debug_line    0x0000000000003a70      0x16a obj/kern/lapic.o
+ .debug_line    0x0000000000003bda      0x17a obj/kern/spinlock.o
+ .debug_line    0x0000000000003d54      0x17e obj/kern/e1000.o
+ .debug_line    0x0000000000003ed2      0x1dc obj/kern/pci.o
+ .debug_line    0x00000000000040ae       0x50 obj/kern/time.o
+ .debug_line    0x00000000000040fe      0x374 obj/vmm/ept.o
+ .debug_line    0x0000000000004472      0x73e obj/vmm/vmx.o
+ .debug_line    0x0000000000004bb0      0x26e obj/vmm/vmexits.o
 
 .debug_frame
  *(.debug_frame)

@@ -21,19 +21,27 @@ map_in_guest( envid_t guest, uintptr_t gpa, size_t memsz,
 	      int fd, size_t filesz, off_t fileoffset ) {
 	int r;
 	/* Your code here */
-	//allocate memory into the guest environment
-	Struct Env * guestenv = envs[guest];
-	region_alloc(guestenv, (void *)gpa, memsz);
+	
 
 	//allocate memory into the current env
 	if ((r = sys_page_alloc(0,UTEMP,PTE_P|PTE_W|PTE_U)) < 0) return r;
 	//seek file offset
 	if ((r = seek(fd,fileoffset)) < 0) return r;
 	//loop through the program segment one PGSIZE until filesz
-	for (int loop = filesz;loop > 0; loop -= PGSIZE){
+	int loop = filesz;
+	for (;loop> 0; loop -= PGSIZE){
 		int readsize = loop >= PGSIZE ? PGSIZE: loop;
-		if (read(fd,&UTEMP,readsize) < readsize) return = -1;
-		if (( r = sys_ept_map(0,UTEMP.guest,gpa + (filesz - loop),PTE_P|PTE_W|PTE_U)) < 0) return r;
+		if (read(fd,UTEMP,readsize) < readsize) return -1;
+		//allocate memory into the guest environment
+		void * curr_gpa = (void*)(gpa + (filesz - loop));
+		if ((r = sys_page_alloc(guest,curr_gpa,PTE_P|PTE_W|PTE_U)) < 0) {
+			cprintf("Failed to allocate page for guest\n");
+			return r;
+		}
+		if (( r = sys_ept_map(0,UTEMP,guest,curr_gpa,PTE_P|PTE_W|PTE_U)) < 0) {
+			cprintf("Failed to map page for guest\n");
+			return r;
+		}
 	}
 	
 	return 0;
@@ -52,8 +60,9 @@ copy_guest_kern_gpa( envid_t guest, char* fname ) {
 	struct Env * guestenv;
 	struct Proghdr ph;
 	struct Secthdr sh;
+	int r;
 	//get guestenv
-	if ((r = envid2env(guest,&guestenv,true)) < 0) return r;
+	//if ((r = envid2env(guest,&guestenv,true)) < 0) return r;
 
 	//open file check for errors
 	int fd = open(fname,O_RDONLY);
@@ -62,19 +71,20 @@ copy_guest_kern_gpa( envid_t guest, char* fname ) {
 	//read elf header
 	if (read(fd,&elf,sizeof(elf) < sizeof(elf))) return -1;
 	if (elf.e_magic == ELF_MAGIC) {
-		lcr3(PADDR((uint64_t) guestenv->env_pml4e));
+		//lcr3(PADDR((uint64_t) guestenv->env_pml4e));
 		//read program headers
-		for (int i =0;i<elf.e_phnum;i++){
+		int i =0;
+		for (;i<elf.e_phnum;i++){
 			//seek first
 			if ((r = seek(fd,elf.e_phoff + (i * sizeof(ph)))) < 0) return r;
 			if (read(fd,&ph,sizeof(ph) < sizeof(ph))) return -1;
 			//map in the program header
-			if (ph.p_type == ELf_PROG_LOAD){
-				if (( r = map_in_guest(guest,ph.p_va,ph.p_memsz,fd,ph.filesz,ph.p_offset)) < 0) return r;
+			if (ph.p_type == ELF_PROG_LOAD){
+				if (( r = map_in_guest(guest,ph.p_va,ph.p_memsz,fd,ph.p_filesz,ph.p_offset)) < 0) return r;
 			}
 		}
 	}
-	return -E_NO_SYS;
+	return 0;
 }
 
 void
