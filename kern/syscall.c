@@ -471,7 +471,7 @@ sys_ept_map(envid_t srcenvid, void *srcva,
 		return -E_INVAL;
 	if ((perm & PTE_W) && !(*ppte & PTE_W))
 		return -E_INVAL;
-	if ((r = ept_map_hva2gpa(KADDR(guestenv->env_cr3), srcva, guest_pa, perm,1)) < 0){
+	if ((r = ept_map_hva2gpa(KADDR(guestenv->env_cr3), page2kva(pp), guest_pa, perm,1)) < 0){
 		cprintf("Failed to map hva2gpa\n");
 		return r;
 	}
