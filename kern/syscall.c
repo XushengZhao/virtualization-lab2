@@ -469,10 +469,11 @@ sys_ept_map(envid_t srcenvid, void *srcva,
 		return -E_INVAL;
 	if ((pp = page_lookup(srcenv->env_pml4e, srcva, &ppte)) == 0)
 		return -E_INVAL;
+	if (perm == 0) return -E_INVAL;
 	if ((perm & PTE_W) && !(*ppte & PTE_W))
 		return -E_INVAL;
-	if ((r = ept_map_hva2gpa(KADDR(guestenv->env_cr3), page2kva(pp), guest_pa, perm,1)) < 0){
-		cprintf("Failed to map hva2gpa\n");
+	if ((r = ept_map_hva2gpa((guestenv->env_pml4e), page2kva(pp), guest_pa, perm,0)) < 0){
+		//cprintf("Failed to map hva2gpa\n");
 		return r;
 	}
     return 0;

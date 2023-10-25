@@ -34,12 +34,8 @@ map_in_guest( envid_t guest, uintptr_t gpa, size_t memsz,
 		if (read(fd,UTEMP,readsize) < readsize) return -1;
 		//allocate memory into the guest environment
 		void * curr_gpa = (void*)(gpa + (filesz - loop));
-		if ((r = sys_page_alloc(guest,curr_gpa,PTE_P|PTE_W|PTE_U)) < 0) {
-			cprintf("Failed to allocate page for guest\n");
-			return r;
-		}
 		if (( r = sys_ept_map(0,UTEMP,guest,curr_gpa,PTE_P|PTE_W|PTE_U)) < 0) {
-			cprintf("Failed to map page for guest\n");
+			//cprintf("Failed to map page for guest\n");
 			return r;
 		}
 	}

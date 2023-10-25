@@ -49,59 +49,16 @@ static inline int epte_present(epte_t epte)
 static int ept_lookup_gpa(epte_t* eptrt, void *gpa,
 			  int create, epte_t **epte_out) {
     /* Your code here */
-    struct PageInfo *page   = NULL;
+    struct PageInfo *page;;
 	if (eptrt == NULL) return -E_INVAL;
-	/*
-	//walk first top level to get a page map level 4 entry
-	pdpe_t * pdpe = (pdpe_t* ) eptrt [PML4(gpa)];
-	//Create entry is not present
-	if (!((physaddr_t)pdpe & PTE_P && !create)) return -E_NO_ENT;
-	//create page directory pointer  table
-	if (!((physaddr_t)pdpe & PTE_P) && create) {
-		//allocate a new page for page directory pointers table
-		if ((page = page_alloc(ALLOC_ZERO))) {
-			page->pp_ref    += 1;
-			eptrt [PML4(gpa)] = page2pa(page)|__EPTE_FULL;
-			pdpe = (pdpe_t* ) eptrt [PML4(gpa)];
-		}else {
-			return -E_NO_MEM;
-		}
-	}
-	//continue walking page directory pointer table
-	pdpe = KADDR((uintptr_t)((pdpe_t *)PTE_ADDR(pdpe))); //is this needed?
-	pde_t  * pdp = (pde_t *) pdpe [PDPE(gpa)];
-	if (!((physaddr_t)pdp & PTE_P && !create)) return -E_NO_ENT;
-	if (!((physaddr_t)pdp & PTE_P) && create) {
-		//allocate a new page for page directory table
-		if ((page = page_alloc(ALLOC_ZERO))) {
-			page->pp_ref    += 1;
-			pdpe [PDPE(gpa)] = page2pa(page)|__EPTE_FULL;
-			pdp = (pde_t* ) pdpe [PDPE(gpa)];
-		}else {
-			return -E_NO_MEM;
-		}
-	}
-	//continue walking page directory table
-	pdp = KADDR((uintptr_t)((pde_t *)PTE_ADDR(pdp))); //is this needed?
-	pte_t  * pte = (pde_t *) pdp [PDX(gpa)];
-	if (!((physaddr_t)pte & PTE_P && !create)) return -E_NO_ENT;
-	if (!((physaddr_t)pte & PTE_P) && create) {
-		//allocate a new page for page table
-		if ((page = page_alloc(ALLOC_ZERO))) {
-			page->pp_ref    += 1;
-			pdp [PDX(gpa)] = page2pa(page)|__EPTE_FULL;
-			pte = (pde_t* ) pdp [PDX(gpa)];
-		}else {
-			return -E_NO_MEM;
-		}
-	}
-	*/
 	epte_t * dir = eptrt; 
+	int i;
 	for ( i = EPT_LEVELS - 1; i > 0; --i ) {
         int idx = ADDR_TO_IDX(gpa, i);
         if (!epte_present(dir[idx])) {
         	if (!create) return -E_NO_ENT;
 			if ((page = page_alloc(ALLOC_ZERO))) {
+				//cprintf("creating immediate page at level %d\n",i);
 				page->pp_ref    += 1;
 				dir[idx]= page2pa(page)|__EPTE_FULL;
 			}else {
@@ -192,17 +149,26 @@ int ept_map_hva2gpa(epte_t* eptrt, void* hva, void* gpa, int perm,
         int overwrite) {
     /* Your code here */
 	epte_t * epte;
-	int r = -1;
+	int r;
 	//lookup the extended page table entry
-	if ((r = ept_lookup_gpa(eptrt,gpa,overwrite,&epte)) != 0) {
-		cprintf("Failed to lookup gpa for guest\n");
+	if ((r = ept_lookup_gpa(eptrt,gpa,1,&epte)) < 0) {
+		//cprintf("Failed to lookup gpa for guest\n");
 		return r;
 	}
 	//check if mapping already exists
-	if (epte_present(epte) && !overwrite)
-		return -E_INVAL;
+	if (epte_present(*epte)){
+		if (!overwrite){
+			//cprintf("EPTE present and overwrite not set\n");
+			return -E_INVAL;
+		}
+		tlb_invalidate(eptrt,gpa);
+		struct PageInfo *p = pa2page((*epte));
+		page_decref(p);
+	}
 	//map epte to hva with permissions
-	*epte =  (uint64_t) hva | perm | __EPTE_TYPE(EPTE_TYPE_WB) |  __EPTE_IPAT;
+	*epte =  (uint64_t) PADDR(hva) | perm | __EPTE_TYPE(EPTE_TYPE_WB) |  __EPTE_IPAT;
+	struct PageInfo *p = pa2page(PADDR(hva));
+	p->pp_ref++;
 
     return 0;
 }
