@@ -19,27 +19,48 @@
 static int
 map_in_guest( envid_t guest, uintptr_t gpa, size_t memsz, 
 	      int fd, size_t filesz, off_t fileoffset ) {
-	int r;
-	/* Your code here */
-	
+	int i, ret;
 
-	//allocate memory into the current env
-	if ((r = sys_page_alloc(0,UTEMP,PTE_P|PTE_W|PTE_U)) < 0) return r;
-	//seek file offset
-	if ((r = seek(fd,fileoffset)) < 0) return r;
-	//loop through the program segment one PGSIZE until filesz
-	int loop = filesz;
-	for (;loop> 0; loop -= PGSIZE){
-		int readsize = loop >= PGSIZE ? PGSIZE: loop;
-		if (read(fd,UTEMP,readsize) < readsize) return -1;
-		//allocate memory into the guest environment
-		void * curr_gpa = (void*)(gpa + (filesz - loop));
-		if (( r = sys_ept_map(0,UTEMP,guest,curr_gpa,PTE_P|PTE_W|PTE_U)) < 0) {
-			//cprintf("Failed to map page for guest\n");
-			return r;
-		}
+	i = PGOFF(gpa);
+	// if the provided guest physical address is not page-aligned, 
+	// adjust our values so we are working with a page-aligned address
+	if (i) {
+		gpa -= i;
+		memsz += i;
+		filesz += i;
+		fileoffset -= i;
 	}
-	
+
+	// walk through the provided region page by page and copy in the file contents
+	// the the physical memory region of the guest
+	for (i = 0; i < memsz; i += PGSIZE) {
+		// allocate a temporary page
+		ret = sys_page_alloc(0, UTEMP, PTE_P | PTE_U | PTE_W);
+		if (ret < 0) {
+			sys_page_unmap(0, UTEMP);
+			return ret;
+		}
+		// seek to the location to write the file contents at
+		ret = seek(fd, fileoffset + i);
+		if (ret < 0) {
+			sys_page_unmap(0, UTEMP);
+			return ret;
+		}
+		// read file contents into the mapped page
+		ret = readn(fd, UTEMP, MIN(PGSIZE, filesz-i));
+		if (ret < 0) {
+			sys_page_unmap(0, UTEMP);
+			return ret;
+		}
+		// map the page in the EPT
+		ret = sys_ept_map(0, UTEMP, guest, (void*) (gpa + i), __EPTE_FULL);
+		if (ret < 0) {
+			sys_page_unmap(0, UTEMP);
+			return ret;
+		}
+		sys_page_unmap(0, UTEMP);
+	}
+
 	return 0;
 } 
 
@@ -51,35 +72,51 @@ map_in_guest( envid_t guest, uintptr_t gpa, size_t memsz,
 // Hint: compare with ELF parsing in env.c, and use map_in_guest for each segment.
 static int
 copy_guest_kern_gpa( envid_t guest, char* fname ) {
-	/* Your code here */
-	struct Elf elf;
-	struct Env * guestenv;
-	struct Proghdr ph;
-	struct Secthdr sh;
-	int r;
-	//get guestenv
-	//if ((r = envid2env(guest,&guestenv,true)) < 0) return r;
+	// open the specified file
+	int fd, i, ret;
+	fd = open(fname, O_RDONLY);
+	if (fd < 0) {
+		cprintf("error opening %s: %e\n", fname, fd);
+		return fd;
+	}
 
-	//open file check for errors
-	int fd = open(fname,O_RDONLY);
-	if (fd < 0) return fd;
+	int buflen = 512; // large enough to fit the whole Elf struct
+	unsigned char elf_buf[buflen];
+	struct Elf *elf;
+	struct Proghdr *ph;
 
-	//read elf header
-	if (read(fd,&elf,sizeof(elf) < sizeof(elf))) return -1;
-	if (elf.e_magic == ELF_MAGIC) {
-		//lcr3(PADDR((uint64_t) guestenv->env_pml4e));
-		//read program headers
-		int i =0;
-		for (;i<elf.e_phnum;i++){
-			//seek first
-			if ((r = seek(fd,elf.e_phoff + (i * sizeof(ph)))) < 0) return r;
-			if (read(fd,&ph,sizeof(ph) < sizeof(ph))) return -1;
-			//map in the program header
-			if (ph.p_type == ELF_PROG_LOAD){
-				if (( r = map_in_guest(guest,ph.p_va,ph.p_memsz,fd,ph.p_filesz,ph.p_offset)) < 0) return r;
-			}
+	// read in the header of file fname
+	ret = readn(fd, elf_buf, buflen);
+	if (ret != buflen) {
+		close(fd);
+		cprintf("Failed to read in ELF header\n");
+		return -E_NOT_EXEC;
+	}
+
+	// point the elf struct at the elf buf
+	elf = (struct Elf*) elf_buf;
+
+	// check the ELF header's magic value to check that we are working with a valid ELF binary
+	if (elf->e_magic != ELF_MAGIC) {
+		close(fd);
+		cprintf("ELF magic is %08x, expected %08x\n", elf->e_magic, ELF_MAGIC);
+	}
+
+	// point the program header struct at the location indicated by the elf header
+	ph = (struct Proghdr* ) (elf_buf + elf->e_phoff);
+
+	// for every entry in the program header table, map the corresponding entry of the file 
+	// into the guest's physical address space
+	for (i = 0; i < elf->e_phnum; i++, ph++) {
+		ret = map_in_guest(guest, ph->p_pa, ph->p_memsz, fd, ph->p_filesz, ph->p_offset);
+		if (ret < 0) {
+			cprintf("Error mapping EPT page in guest %e\n", ret);
+			close(fd);
+			return ret;
 		}
 	}
+
+	close(fd);
 	return 0;
 }
 
